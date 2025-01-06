@@ -222,7 +222,7 @@ var evalOrg = {};
 
 		$('#tab').appendChild(object2Dom({
 			dl:{
-				dt: {_text: "Output for php 8.2.11"},
+				dt: { id: "phpversion", _text: "Output for php x.x.x"},
 				dd: {
 					div: {
 						id: 'live_preview'
@@ -236,6 +236,15 @@ var evalOrg = {};
 
 	this.livePreviewInit = function(imported){
 		const { PhpWeb } = imported;
+
+		// Compute version
+		const phpVersionRunner = new PhpWeb()
+		phpVersionRunner.addEventListener('output', (event) => {
+			$('#phpversion').textContent = "Output for php " + event.detail[0]
+		});
+		phpVersionRunner.run('<?php echo phpversion();')
+
+		// Live preview engine
 		this.php = new PhpWeb({ini: `
 max_execution_time = 3
 memory_limit = 64M
